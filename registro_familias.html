@@ -87,16 +87,16 @@ body{
 .check-item span{color:var(--soft);font-size:13px}
 
 /* RADIO */
-.radio-grid{display:flex;gap:10px;flex-wrap:wrap}
+.radio-grid{display:flex;flex-direction:column;gap:8px}
 .radio-item{
-  display:flex;align-items:center;gap:8px;
+  display:flex;align-items:center;gap:12px;
   background:rgba(4,7,27,.6);border:0.5px solid var(--border);
-  border-radius:8px;padding:10px 14px;cursor:pointer;
-  transition:all .15s;flex:1;min-width:120px;
+  border-radius:8px;padding:13px 16px;cursor:pointer;
+  transition:all .15s;width:100%;
 }
 .radio-item:hover{border-color:var(--blue)}
-.radio-item input{accent-color:var(--blue);cursor:pointer}
-.radio-item span{color:var(--soft);font-size:13px}
+.radio-item input{width:18px;height:18px;accent-color:var(--blue);cursor:pointer;flex-shrink:0}
+.radio-item span{color:var(--soft);font-size:14px}
 
 /* SUBMIT */
 .submit-wrap{margin-top:8px;text-align:center}
@@ -128,7 +128,6 @@ body{
 
 @media(max-width:600px){
   .grid2,.check-grid{grid-template-columns:1fr}
-  .radio-grid{flex-direction:column}
   .header-title{font-size:26px}
 }
 </style>
