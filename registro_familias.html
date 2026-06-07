@@ -242,11 +242,12 @@ body{
       <div class="card-body">
         <div class="campo">
           <label>Modalidad <span class="req">*</span></label>
-          <div class="radio-grid">
-            <label class="radio-item"><input type="radio" name="modalidad" value="Presencial a domicilio" required><span>Presencial a domicilio</span></label>
-            <label class="radio-item"><input type="radio" name="modalidad" value="Online"><span>Online</span></label>
-            <label class="radio-item"><input type="radio" name="modalidad" value="Indiferente"><span>Indiferente</span></label>
-          </div>
+          <select name="modalidad" required>
+            <option value="">Seleccionar</option>
+            <option value="Presencial a domicilio">Presencial a domicilio</option>
+            <option value="Online">Online</option>
+            <option value="Indiferente">Indiferente</option>
+          </select>
         </div>
         <div class="campo">
           <label>Zona o barrio <span style="color:var(--muted);font-weight:400">(si es presencial)</span></label>
