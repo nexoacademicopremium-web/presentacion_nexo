@@ -344,31 +344,44 @@ body{
 </div>
 
 <script>
+emailjs.init('0RIq4USM1vj4Z7Vmx');
+
 const form = document.getElementById('form');
 form.addEventListener('submit', async function(e) {
   e.preventDefault();
   const btn = form.querySelector('.btn-submit');
   btn.textContent = 'Enviando...';
   btn.disabled = true;
+
+  const formData = new FormData(form);
+
+  // 1. Enviar a Formspree
   try {
-    const res = await fetch(form.action, {
+    await fetch(form.action, {
       method: 'POST',
-      body: new FormData(form),
+      body: formData,
       headers: { 'Accept': 'application/json' }
     });
-    if (res.ok) {
-      form.style.display = 'none';
-      document.getElementById('success').style.display = 'block';
-    } else {
-      btn.innerHTML = '<i class="ti ti-send"></i> Enviar registro';
-      btn.disabled = false;
-      alert('Ha habido un error. Por favor inténtalo de nuevo.');
+  } catch(err) {}
+
+  // 2. Enviar email bienvenida con EmailJS
+  const email = formData.get('email');
+  const nombre = formData.get('nombre_alumno') || 'el alumno';
+  if (email) {
+    try {
+      await emailjs.send('service_ywyg2a8', 'template_s8cfxey', {
+        email: email,
+        nombre_alumno: nombre
+      });
+    } catch(err) {
+      console.error('EmailJS:', err);
     }
-  } catch(err) {
-    btn.innerHTML = '<i class="ti ti-send"></i> Enviar registro';
-    btn.disabled = false;
-    alert('Ha habido un error. Por favor inténtalo de nuevo.');
   }
+
+  // 3. Mostrar confirmación
+  form.style.display = 'none';
+  document.getElementById('success').style.display = 'block';
+  window.scrollTo(0, 0);
 });
 </script>
 </body>
