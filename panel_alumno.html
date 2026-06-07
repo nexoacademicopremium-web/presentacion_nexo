@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Área Alumno — Nexo Académico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  :root {
+    --dark:#04071b; --navy:#154ca9; --blue:#6eaef0; --bg:#060d20;
+    --surface:#0a1530; --border:#1a2a4a; --border2:#0f1f35;
+    --txt:#e0eaf8; --muted:#4a6080; --soft:#a8c8f0;
+    --green:#1a7f5e; --green-lt:#0d2d1e;
+    --amber:#b45309; --amber-lt:#2d1e0d;
+    --red:#c0392b; --red-lt:#2d0d0d;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
+
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:100;height:54px;background:var(--dark);border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+  .topbar-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+  .topbar-brand img{height:36px;width:36px;object-fit:contain}
+  .t1{color:#fff;font-size:14px;font-weight:600;letter-spacing:2px;display:block;line-height:1}
+  .t2{color:var(--blue);font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-top:2px;display:block}
+  .topbar-right{display:flex;align-items:center;gap:12px}
+  .topbar-name{color:var(--soft);font-size:13px}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:12px;font-weight:600;border:1.5px solid var(--border)}
+
+  .sidebar{position:fixed;top:54px;left:0;bottom:0;width:210px;background:var(--dark);border-right:0.5px solid var(--border);display:flex;flex-direction:column;padding:18px 0 16px}
+  .nav-section{padding:0 16px 8px;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.8px;font-weight:500}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--muted);font-size:13px;border-left:2.5px solid transparent;margin-bottom:1px;cursor:pointer;transition:all .15s}
+  .nav-item:hover{color:var(--soft);background:#0a1530}
+  .nav-item.active{color:var(--blue);border-left-color:var(--blue);background:#0a1a30}
+  .nav-item i{font-size:17px;flex-shrink:0}
+  .nav-divider{height:.5px;background:var(--border);margin:10px 16px}
+  .nav-bottom{margin-top:auto;padding-top:8px}
+  .nav-link{text-decoration:none}
+
+  .main{margin-left:210px;margin-top:54px;padding:24px 26px;min-height:calc(100vh - 54px)}
+  .page-title{color:#fff;font-size:20px;font-weight:600;margin-bottom:3px}
+  .page-sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+
+  .panel{display:none;position:fixed;top:54px;left:210px;right:0;bottom:0;overflow-y:auto;background:#060d20;padding:24px 26px;z-index:50}
+  .back{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;text-decoration:none;margin-bottom:22px;cursor:pointer;background:none;border:none;font-family:inherit}
+  .back:hover{color:var(--blue)}
+  .back i{font-size:16px}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+  .kpi{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:16px 18px;border-top:3px solid}
+  .kpi.blue{border-top-color:var(--blue)}
+  .kpi.amber{border-top-color:var(--amber)}
+  .kpi.green{border-top-color:var(--green)}
+  .kpi-label{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.6px;font-weight:500;margin-bottom:7px}
+  .kpi-val{color:#fff;font-size:26px;font-weight:600;line-height:1}
+  .kpi-sub{color:var(--muted);font-size:11px;margin-top:5px}
+  .prog-bg{background:var(--border2);border-radius:20px;height:6px;overflow:hidden;margin-top:8px}
+  .prog-bar{height:6px;border-radius:20px}
+
+  .alerta{background:var(--amber-lt);border:0.5px solid var(--amber);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:11px 16px;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+  .alerta i{color:var(--amber);font-size:18px;flex-shrink:0}
+  .alerta-txt{flex:1;color:#e8c080;font-size:13px;line-height:1.5}
+  .alerta-txt b{color:#f0a830}
+  .alerta-btn{background:var(--amber);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:inherit;text-decoration:none;display:inline-block}
+
+  .card{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px}
+  .card-head{padding:13px 16px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .card-title{color:var(--soft);font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px}
+  .card-title i{font-size:15px;color:var(--blue)}
+  .card-body{padding:14px 16px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .col-stack{display:flex;flex-direction:column;gap:16px}
+
+  .pill{font-size:10px;padding:2px 9px;border-radius:20px;font-weight:500;display:inline-block}
+  .pill-eso{background:#0f2240;color:var(--blue)}
+  .pill-bach{background:#1a0f30;color:#9b7ef0}
+  .pill-new{background:#0f2240;color:var(--blue)}
+  .pill-seen{background:#0f1f35;color:var(--muted)}
+
+  .inf-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--border2);cursor:pointer}
+  .inf-row:last-child{border-bottom:none}
+  .inf-row:hover .inf-name{color:var(--blue)}
+  .inf-ico{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .inf-ico.m{background:#0f2240} .inf-ico.m i{color:var(--blue);font-size:16px}
+  .inf-ico.s{background:#0d2d1e} .inf-ico.s i{color:var(--green);font-size:16px}
+  .inf-name{color:var(--txt);font-size:12px;font-weight:500}
+  .inf-sub{color:var(--muted);font-size:10px;margin-top:1px}
+  .dl{width:26px;height:26px;border-radius:6px;background:#0f2240;border:.5px solid var(--border);display:flex;align-items:center;justify-content:center;margin-left:auto;flex-shrink:0}
+  .dl i{font-size:13px;color:var(--blue)}
+
+  .ev-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:.5px solid var(--border2)}
+  .ev-row:last-child{border-bottom:none}
+  .ev-label{color:var(--soft);font-size:11px;flex:1}
+  .ev-bar-bg{width:72px;height:5px;background:var(--border2);border-radius:20px;overflow:hidden;margin:0 10px}
+  .ev-bar{height:5px;border-radius:20px}
+  .ev-num{color:#fff;font-size:11px;font-weight:500;min-width:24px;text-align:right}
+  .ev-delta{font-size:10px;min-width:32px;text-align:right}
+
+  /* PROFESOR CARD */
+  .profe-card{display:flex;align-items:center;gap:14px;padding:14px 16px}
+  .profe-av{width:48px;height:48px;border-radius:50%;background:#0f2240;display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:15px;font-weight:600;flex-shrink:0;border:2px solid var(--navy)}
+  .profe-name{color:#fff;font-size:14px;font-weight:500;margin-bottom:2px}
+  .profe-det{color:var(--muted);font-size:11px;margin-bottom:5px}
+  .profe-tags{display:flex;gap:5px;flex-wrap:wrap}
+  .tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500}
+  .tag-b{background:#0f2240;color:var(--blue)}
+  .tag-g{background:#0d2d1e;color:var(--green)}
+  .stars{color:var(--amber);font-size:14px;margin-left:auto;white-space:nowrap}
+
+  /* ESTUDIAR */
+  .asig-card{background:var(--dark);border:.5px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .15s;text-decoration:none;display:block}
+  .asig-card:hover{border-color:var(--blue);background:#0a1530}
+  .asig-icon{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+  .asig-icon i{font-size:20px;color:#fff}
+  .asig-name{color:#fff;font-size:13px;font-weight:500;margin-bottom:3px}
+  .asig-det{color:var(--muted);font-size:11px}
+  .asig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+
+  .recurso-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:.5px solid var(--border2);cursor:pointer;transition:background .1s}
+  .recurso-row:last-child{border-bottom:none}
+  .recurso-row:hover{background:var(--border2)}
+  .recurso-ico{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .recurso-name{color:var(--txt);font-size:12px;font-weight:500}
+  .recurso-sub{color:var(--muted);font-size:10px;margin-top:1px}
+  .recurso-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;margin-left:auto;white-space:nowrap}
+  .badge-pdf{background:#0f2240;color:var(--blue)}
+  .badge-test{background:#0d2d1e;color:var(--green)}
+  .badge-new{background:#1a0f30;color:#9b7ef0}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="https://nexoacademico.com" class="topbar-brand">
+    <img src="data:image/png;base64,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" alt="Nexo">
+    <div><span class="t1">NEXO</span><span class="t2">Académico</span></div>
+  </a>
+  <div class="topbar-right">
+    <span class="topbar-name">Pablo García</span>
+    <div class="avatar">PG</div>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <div class="nav-section">Mi área</div>
+  <div class="nav-item active" onclick="mostrarPanel('main')"><i class="ti ti-layout-dashboard"></i> Inicio</div>
+  <div class="nav-item" onclick="mostrarPanel('informes')"><i class="ti ti-file-analytics"></i> Mis informes</div>
+  <div class="nav-item" onclick="mostrarPanel('profesor')"><i class="ti ti-user-check"></i> Mi profesor</div>
+  <div class="nav-item" onclick="mostrarPanel('estudiar')"><i class="ti ti-book"></i> Estudiar</div>
+  <div class="nav-divider"></div>
+  <div class="nav-bottom">
+    <a href="https://nexoacademico.com" class="nav-item nav-link"><i class="ti ti-arrow-left"></i> Volver a la web</a>
+  </div>
+</nav>
+
+<!-- ═══ PANEL INICIO ═══ -->
+<main class="main" id="panel-main">
+
+  <h1 class="page-title">Hola, Pablo</h1>
+  <p class="page-sub">3.º ESO · Matemáticas · Junio 2025</p>
+
+  <!-- ALERTA BONO -->
+  <div class="alerta">
+    <i class="ti ti-alert-triangle"></i>
+    <div class="alerta-txt"><b>Bono al 75% consumido.</b> Te quedan 2 horas. Renueva para no interrumpir las clases.</div>
+    <a href="https://wa.me/34611492592?text=Hola%20Manu%2C%20quiero%20renovar%20el%20bono%20de%20Pablo." class="alerta-btn" target="_blank">Renovar bono ↗</a>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi blue">
+      <div class="kpi-label">Horas restantes del bono</div>
+      <div class="kpi-val">2h</div>
+      <div class="kpi-sub">de 8h contratadas</div>
+      <div class="prog-bg"><div class="prog-bar" style="width:25%;background:var(--amber)"></div></div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">Último bono contratado</div>
+      <div class="kpi-val" style="font-size:16px;margin-top:4px">Bono 8h</div>
+      <div class="kpi-sub">ESO / Bachillerato · 144€</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-label">Próxima clase</div>
+      <div class="kpi-val" style="font-size:16px;margin-top:4px">Jue 5 jun</div>
+      <div class="kpi-sub">17:00h · 60 min · Carlos M.</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="col-stack">
+      <!-- INFORMES RECIENTES -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><i class="ti ti-file-analytics"></i> Informes recientes</div>
+          <button onclick="mostrarPanel('informes')" style="background:transparent;color:var(--blue);border:.5px solid var(--border);border-radius:6px;padding:5px 12px;font-size:11px;cursor:pointer;font-family:inherit">Ver todos</button>
+        </div>
+        <div class="card-body" style="padding:8px 14px">
+          <div class="inf-row">
+            <div class="inf-ico m"><i class="ti ti-report-analytics"></i></div>
+            <div style="flex:1"><div class="inf-name">Informe mensual — Mayo 2025</div><div class="inf-sub">4 semanas · 8 sesiones</div></div>
+            <span class="pill pill-new">Nuevo</span>
+            <div class="dl" style="margin-left:8px"><i class="ti ti-download"></i></div>
+          </div>
+          <div class="inf-row">
+            <div class="inf-ico s"><i class="ti ti-report"></i></div>
+            <div style="flex:1"><div class="inf-name">Informe semanal — Sem 4 mayo</div><div class="inf-sub">2 sesiones · 4 horas</div></div>
+            <span class="pill pill-new">Nuevo</span>
+            <div class="dl" style="margin-left:8px"><i class="ti ti-download"></i></div>
+          </div>
+          <div class="inf-row">
+            <div class="inf-ico s"><i class="ti ti-report"></i></div>
+            <div style="flex:1"><div class="inf-name">Informe semanal — Sem 3 mayo</div><div class="inf-sub">2 sesiones · 4 horas</div></div>
+            <span class="pill pill-seen">Visto</span>
+            <div class="dl" style="margin-left:8px"><i class="ti ti-download"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVOLUCIÓN -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><i class="ti ti-chart-line"></i> Evolución del mes</div>
+        </div>
+        <div class="card-body" style="padding:8px 14px">
+          <div class="ev-row"><div class="ev-label">Comprensión</div><div class="ev-bar-bg"><div class="ev-bar" style="width:72%;background:var(--blue)"></div></div><div class="ev-num">7.2</div><div class="ev-delta" style="color:var(--green)">▲+1.2</div></div>
+          <div class="ev-row"><div class="ev-label">Motivación</div><div class="ev-bar-bg"><div class="ev-bar" style="width:84%;background:var(--green)"></div></div><div class="ev-num">8.4</div><div class="ev-delta" style="color:var(--green)">▲+0.4</div></div>
+          <div class="ev-row"><div class="ev-label">Aplicación</div><div class="ev-bar-bg"><div class="ev-bar" style="width:51%;background:var(--amber)"></div></div><div class="ev-num">5.1</div><div class="ev-delta" style="color:var(--amber)">▲+1.1</div></div>
+          <div class="ev-row"><div class="ev-label">Concentración</div><div class="ev-bar-bg"><div class="ev-bar" style="width:68%;background:var(--navy)"></div></div><div class="ev-num">6.8</div><div class="ev-delta" style="color:var(--green)">▲+0.8</div></div>
+          <div class="ev-row"><div class="ev-label">Autonomía</div><div class="ev-bar-bg"><div class="ev-bar" style="width:58%;background:#7c3aed"></div></div><div class="ev-num">5.8</div><div class="ev-delta" style="color:var(--green)">▲+1.8</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-stack">
+      <!-- BONO DETALLE -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><i class="ti ti-coin"></i> Estado del bono</div>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <div><div style="color:var(--muted);font-size:10px;margin-bottom:3px">Bono activo</div><div style="color:#fff;font-size:13px;font-weight:500">Bono 8h — ESO/Bachillerato</div></div>
+            <div style="text-align:right"><div style="color:var(--muted);font-size:10px;margin-bottom:3px">Consumido</div><div style="color:var(--amber);font-size:13px;font-weight:500">75%</div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px"><span>6h consumidas</span><b style="color:#fff">2h restantes</b></div>
+          <div class="prog-bg"><div class="prog-bar" style="width:75%;background:var(--amber)"></div></div>
+          <div style="margin-top:12px;background:#1a0a00;border:.5px solid var(--amber);border-radius:7px;padding:9px 11px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <div style="color:#e8c080;font-size:11px">Quedan 2h — renueva para no interrumpir</div>
+            <a href="https://wa.me/34611492592?text=Hola%20Manu%2C%20quiero%20renovar%20el%20bono%20de%20Pablo." target="_blank" style="background:var(--amber);color:#fff;border:none;border-radius:5px;padding:5px 12px;font-size:11px;font-weight:500;text-decoration:none;white-space:nowrap">Renovar ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRÓXIMAS CLASES -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><i class="ti ti-calendar"></i> Próximas clases</div>
+        </div>
+        <div class="card-body" style="padding:8px 14px">
+          <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--border2)">
+            <div style="width:36px;height:36px;border-radius:8px;background:#0f2240;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0"><div style="color:var(--blue);font-size:12px;font-weight:500;line-height:1">05</div><div style="color:var(--muted);font-size:9px">JUN</div></div>
+            <div style="flex:1"><div style="color:#fff;font-size:12px;font-weight:500">Matemáticas</div><div style="color:var(--muted);font-size:11px">Jue · 17:00h · 60 min</div></div>
+            <span style="color:var(--blue);font-size:11px;font-weight:500">Mañana</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--border2)">
+            <div style="width:36px;height:36px;border-radius:8px;background:#0f2240;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0"><div style="color:var(--blue);font-size:12px;font-weight:500;line-height:1">09</div><div style="color:var(--muted);font-size:9px">JUN</div></div>
+            <div style="flex:1"><div style="color:#fff;font-size:12px;font-weight:500">Matemáticas</div><div style="color:var(--muted);font-size:11px">Lun · 17:00h · 60 min</div></div>
+            <span style="color:var(--muted);font-size:11px">En 5 días</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:9px 0">
+            <div style="width:36px;height:36px;border-radius:8px;background:#0f2240;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0"><div style="color:var(--blue);font-size:12px;font-weight:500;line-height:1">11</div><div style="color:var(--muted);font-size:9px">JUN</div></div>
+            <div style="flex:1"><div style="color:#fff;font-size:12px;font-weight:500">Matemáticas</div><div style="color:var(--muted);font-size:11px">Mié · 17:00h · 60 min</div></div>
+            <span style="color:var(--muted);font-size:11px">En 7 días</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══ PANEL INFORMES ═══ -->
+<div class="panel" id="panel-informes">
+  <button class="back" onclick="mostrarPanel('main')"><i class="ti ti-arrow-left"></i> Volver al inicio</button>
+  <h1 class="page-title">Mis informes</h1>
+  <p class="page-sub" style="margin-bottom:20px">Todos tus informes de seguimiento</p>
+  <div class="card">
+    <div class="card-head"><div class="card-title"><i class="ti ti-report-analytics"></i> Informes mensuales</div></div>
+    <div class="card-body" style="padding:8px 14px">
+      <div class="inf-row"><div class="inf-ico m"><i class="ti ti-report-analytics"></i></div><div style="flex:1"><div class="inf-name">Informe mensual — Mayo 2025</div><div class="inf-sub">4 semanas · 8 sesiones · Análisis completo</div></div><span class="pill pill-new">Nuevo</span><div class="dl" style="margin-left:8px"><i class="ti ti-download"></i></div></div>
+      <div class="inf-row"><div class="inf-ico m"><i class="ti ti-report-analytics"></i></div><div style="flex:1"><div class="inf-name">Informe mensual — Abril 2025</div><div class="inf-sub">4 semanas · análisis completo</div></div><span class="pill pill-seen">Visto</span><div class="dl" style="margin-left:8px"><i class="ti ti-download"></i></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-title"><i class="ti ti-report"></i> Informes semanales</div></div>
+    <div class="card-body" style="padding:8px 14px">
+      <div class="inf-row"><div class="inf-ico s"><i class="ti ti-report"></i></div><div style="flex:1"><div class="inf-name">Semana 4 — Mayo 2025</div><div class="inf-sub">2 sesiones · 4 horas</div></div><span class="pill pill-new">Nuevo</span><div class="dl" style="margin-left:8px"><i class="ti ti-download"></i></div></div>
+      <div class="inf-row"><div class="inf-ico s"><i class="ti ti-report"></i></div><div style="flex:1"><div class="inf-name">Semana 3 — Mayo 2025</div><div class="inf-sub">2 sesiones · 4 horas</div></div><span class="pill pill-seen">Visto</span><div class="dl" style="margin-left:8px"><i class="ti ti-download"></i></div></div>
+      <div class="inf-row"><div class="inf-ico s"><i class="ti ti-report"></i></div><div style="flex:1"><div class="inf-name">Semana 2 — Mayo 2025</div><div class="inf-sub">2 sesiones · 4 horas</div></div><span class="pill pill-seen">Visto</span><div class="dl" style="margin-left:8px"><i class="ti ti-download"></i></div></div>
+      <div class="inf-row"><div class="inf-ico s"><i class="ti ti-report"></i></div><div style="flex:1"><div class="inf-name">Semana 1 — Mayo 2025</div><div class="inf-sub">2 sesiones · 4 horas</div></div><span class="pill pill-seen">Visto</span><div class="dl" style="margin-left:8px"><i class="ti ti-download"></i></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PANEL PROFESOR ═══ -->
+<div class="panel" id="panel-profesor">
+  <button class="back" onclick="mostrarPanel('main')"><i class="ti ti-arrow-left"></i> Volver al inicio</button>
+  <h1 class="page-title">Mi profesor</h1>
+  <p class="page-sub" style="margin-bottom:20px">Perfil y datos de contacto</p>
+  <div class="card" style="margin-bottom:16px">
+    <div class="profe-card">
+      <div class="profe-av">CM</div>
+      <div style="flex:1">
+        <div class="profe-name">Carlos Martínez</div>
+        <div class="profe-det">Ingeniero Industrial · UPV · 4 años de experiencia</div>
+        <div class="profe-tags">
+          <span class="tag tag-b">Matemáticas</span>
+          <span class="tag tag-b">Física</span>
+          <span class="tag tag-g">ESO · Bachillerato</span>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div class="stars">★★★★★</div>
+        <div style="color:var(--muted);font-size:11px">4.9 / 5</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="card-title"><i class="ti ti-info-circle"></i> Información</div></div>
+    <div class="card-body" style="padding:8px 16px">
+      <div class="ev-row"><div class="ev-label">Asignatura</div><b style="color:#fff;font-size:12px">Matemáticas · 3.º ESO</b></div>
+      <div class="ev-row"><div class="ev-label">Horario habitual</div><b style="color:#fff;font-size:12px">Lunes y Miércoles 17:00h</b></div>
+      <div class="ev-row"><div class="ev-label">Modalidad</div><b style="color:#fff;font-size:12px">Presencial a domicilio</b></div>
+      <div class="ev-row"><div class="ev-label">Clases juntos</div><b style="color:#fff;font-size:12px">8 sesiones · 16 horas</b></div>
+      <div class="ev-row"><div class="ev-label">Desde</div><b style="color:#fff;font-size:12px">Abril 2025</b></div>
+    </div>
+  </div>
+  <div style="margin-top:16px;background:#0a1a30;border:.5px solid var(--border);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:12px 16px">
+    <div style="color:var(--muted);font-size:11px;margin-bottom:4px">¿Algún problema o quieres hacer un cambio?</div>
+    <a href="https://wa.me/34611492592?text=Hola%20Manu%2C%20tengo%20una%20consulta%20sobre%20mi%20profesor." target="_blank" style="color:var(--blue);font-size:12px;font-weight:500;text-decoration:none">Contactar con Nexo ↗</a>
+  </div>
+</div>
+
+<!-- ═══ PANEL ESTUDIAR ═══ -->
+<div class="panel" id="panel-estudiar">
+  <button class="back" onclick="mostrarPanel('main')"><i class="ti ti-arrow-left"></i> Volver al inicio</button>
+  <h1 class="page-title">Estudiar</h1>
+  <p class="page-sub" style="margin-bottom:20px">Material de apoyo para Matemáticas · 3.º ESO</p>
+
+  <div class="asig-grid">
+    <div class="asig-card" onclick="mostrarRecursos('algebra')">
+      <div class="asig-icon" style="background:#154ca9"><i class="ti ti-math-function"></i></div>
+      <div class="asig-name">Álgebra</div>
+      <div class="asig-det">4 recursos · 1 test</div>
+    </div>
+    <div class="asig-card" onclick="mostrarRecursos('geometria')">
+      <div class="asig-icon" style="background:#1a7f5e"><i class="ti ti-shape"></i></div>
+      <div class="asig-name">Geometría</div>
+      <div class="asig-det">3 recursos · 1 test</div>
+    </div>
+    <div class="asig-card" onclick="mostrarRecursos('estadistica')">
+      <div class="asig-icon" style="background:#7c3aed"><i class="ti ti-chart-bar"></i></div>
+      <div class="asig-name">Estadística</div>
+      <div class="asig-det">2 recursos · 1 test</div>
+    </div>
+    <div class="asig-card" onclick="mostrarRecursos('funciones')">
+      <div class="asig-icon" style="background:#b45309"><i class="ti ti-trending-up"></i></div>
+      <div class="asig-name">Funciones</div>
+      <div class="asig-det">3 recursos · 1 test</div>
+    </div>
+    <div class="asig-card" onclick="mostrarRecursos('numeros')">
+      <div class="asig-icon" style="background:#0891b2"><i class="ti ti-123"></i></div>
+      <div class="asig-name">Números</div>
+      <div class="asig-det">2 recursos · 1 test</div>
+    </div>
+    <div class="asig-card" style="opacity:.5;cursor:default">
+      <div class="asig-icon" style="background:#334155"><i class="ti ti-lock"></i></div>
+      <div class="asig-name" style="color:var(--muted)">Próximamente</div>
+      <div class="asig-det">Más contenido en breve</div>
+    </div>
+  </div>
+
+  <!-- RECURSOS de un tema -->
+  <div id="recursos-panel" style="display:none">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <button onclick="document.getElementById('recursos-panel').style.display='none'" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:0">←</button>
+      <h2 id="recursos-titulo" style="color:#fff;font-size:16px;font-weight:600"></h2>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title"><i class="ti ti-files"></i> Material disponible</div></div>
+      <div class="recurso-row">
+        <div class="recurso-ico" style="background:#0f2240"><i class="ti ti-file-text" style="color:var(--blue);font-size:17px"></i></div>
+        <div style="flex:1"><div class="recurso-name">Resumen del tema</div><div class="recurso-sub">PDF · 4 páginas</div></div>
+        <span class="recurso-badge badge-pdf">PDF</span>
+      </div>
+      <div class="recurso-row">
+        <div class="recurso-ico" style="background:#0f2240"><i class="ti ti-layout-grid" style="color:#9b7ef0;font-size:17px"></i></div>
+        <div style="flex:1"><div class="recurso-name">Esquema visual</div><div class="recurso-sub">PDF · 1 página</div></div>
+        <span class="recurso-badge badge-pdf">PDF</span>
+      </div>
+      <div class="recurso-row">
+        <div class="recurso-ico" style="background:#0f2240"><i class="ti ti-list-check" style="color:#9b7ef0;font-size:17px"></i></div>
+        <div style="flex:1"><div class="recurso-name">Formulario clave</div><div class="recurso-sub">PDF · 1 página</div></div>
+        <span class="recurso-badge badge-pdf">PDF</span>
+      </div>
+      <div class="recurso-row">
+        <div class="recurso-ico" style="background:#0d2d1e"><i class="ti ti-player-play" style="color:var(--green);font-size:17px"></i></div>
+        <div style="flex:1"><div class="recurso-name">Test de práctica</div><div class="recurso-sub">10 preguntas · nivel 3.º ESO</div></div>
+        <span class="recurso-badge badge-test">Test</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMACIÓN -->
+<div id="modal-sesion" style="display:none;position:fixed;inset:0;background:rgba(4,7,27,0.85);z-index:200;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border:.5px solid var(--border);border-radius:14px;padding:36px;max-width:400px;width:90%;text-align:center">
+    <div style="width:56px;height:56px;border-radius:50%;background:var(--green-lt);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 18px">
+      <i class="ti ti-check" style="color:var(--green);font-size:28px"></i>
+    </div>
+    <div style="color:#fff;font-size:18px;font-weight:600;margin-bottom:8px">¡Listo!</div>
+    <div style="color:var(--muted);font-size:13px;margin-bottom:24px">Redirigiendo al WhatsApp de Nexo para completar la renovación.</div>
+    <button onclick="document.getElementById('modal-sesion').style.display='none'" style="background:var(--navy);color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;width:100%">Cerrar</button>
+  </div>
+</div>
+
+<script>
+function mostrarPanel(id) {
+  // Ocultar todo
+  document.getElementById('panel-main').style.display = 'none';
+  document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+  // Actualizar nav
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  // Mostrar el correcto
+  if (id === 'main') {
+    document.getElementById('panel-main').style.display = 'block';
+    document.querySelectorAll('.nav-item')[0].classList.add('active');
+  } else {
+    document.getElementById('panel-' + id).style.display = 'block';
+    const idx = {'informes':1,'profesor':2,'estudiar':3}[id];
+    if (idx !== undefined) document.querySelectorAll('.nav-item')[idx].classList.add('active');
+  }
+  window.scrollTo(0,0);
+}
+
+function mostrarRecursos(tema) {
+  const nombres = {algebra:'Álgebra',geometria:'Geometría',estadistica:'Estadística',funciones:'Funciones',numeros:'Números'};
+  document.getElementById('recursos-titulo').textContent = nombres[tema] || tema;
+  document.getElementById('recursos-panel').style.display = 'block';
+  document.getElementById('recursos-panel').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
