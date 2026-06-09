@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Área — Nexo Académico</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root{
+  --dark:#04071b;--navy:#154ca9;--blue:#6eaef0;
+  --green:#1a7f5e;--amber:#b45309;--soft:#a8c8f0;
+  --muted:#4a6080;--surface:#0a1530;--border:#1a2a4a;
+  --bg:#060d20;--txt:#e0eaf8;
+  --green-lt:#0d2d1e;--amber-lt:#2d1e0d;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
+
+/* TOPBAR */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:54px;background:var(--dark);
+  border-bottom:0.5px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;
+}
+.topbar-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.topbar-brand img{height:34px;width:34px;object-fit:contain}
+.t1{color:#fff;font-size:14px;font-weight:600;letter-spacing:2px;display:block;line-height:1}
+.t2{color:var(--blue);font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-top:2px;display:block}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-name{color:var(--soft);font-size:13px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:12px;font-weight:600;border:1.5px solid var(--border)}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;top:54px;left:0;bottom:0;width:200px;
+  background:var(--dark);border-right:0.5px solid var(--border);
+  display:flex;flex-direction:column;padding:18px 0 16px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 16px;color:var(--muted);font-size:13px;
+  cursor:pointer;border-left:2.5px solid transparent;
+  transition:all .15s;margin-bottom:1px;
+}
+.nav-item:hover{color:var(--soft);background:var(--surface)}
+.nav-item.active{color:var(--blue);border-left-color:var(--blue);background:#0a1a30}
+.nav-item i{font-size:17px;flex-shrink:0}
+
+/* MAIN */
+.main{margin-left:200px;margin-top:54px;padding:24px 26px;min-height:calc(100vh - 54px)}
+.page-title{color:#fff;font-size:20px;font-weight:600;margin-bottom:3px}
+.page-sub{color:var(--muted);font-size:13px;margin-bottom:24px}
+
+/* BUBBLES GRID */
+.bubbles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+.bubble{
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:16px;padding:28px 20px;text-align:center;
+  cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+}
+.bubble::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--navy),var(--blue));
+}
+.bubble.green::before{background:linear-gradient(90deg,var(--green),#34d399)}
+.bubble.amber::before{background:linear-gradient(90deg,var(--amber),#fbbf24)}
+.bubble.purple::before{background:linear-gradient(90deg,#7c3aed,#a78bfa)}
+.bubble:hover{border-color:rgba(110,174,240,.4);transform:translateY(-3px);background:rgba(10,21,48,.9)}
+.bubble-ico{
+  width:56px;height:56px;border-radius:16px;
+  background:rgba(21,76,169,.25);display:flex;align-items:center;
+  justify-content:center;margin:0 auto 14px;
+}
+.bubble-ico i{font-size:28px;color:var(--blue)}
+.bubble.green .bubble-ico{background:rgba(26,127,94,.2)} .bubble.green .bubble-ico i{color:var(--green)}
+.bubble.amber .bubble-ico{background:rgba(179,83,9,.2)} .bubble.amber .bubble-ico i{color:var(--amber)}
+.bubble.purple .bubble-ico{background:rgba(124,58,237,.2)} .bubble.purple .bubble-ico i{color:#a78bfa}
+.bubble-title{color:#fff;font-size:15px;font-weight:600;margin-bottom:5px}
+.bubble-sub{color:var(--muted);font-size:12px}
+.bubble-badge{
+  position:absolute;top:12px;right:12px;
+  background:var(--navy);color:var(--blue);
+  font-size:10px;font-weight:600;
+  padding:2px 8px;border-radius:20px;
+}
+
+/* SECCIÓN INFORMES */
+.section{display:none}
+.section.active{display:block}
+.back-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--muted);font-size:13px;cursor:pointer;
+  margin-bottom:20px;border:none;background:none;
+  font-family:inherit;transition:color .15s;padding:0;
+}
+.back-btn:hover{color:var(--blue)}
+.back-btn i{font-size:16px}
+
+/* FILTROS */
+.filtros{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.filtro-btn{
+  padding:6px 16px;border-radius:50px;font-size:12px;
+  font-weight:500;cursor:pointer;border:0.5px solid var(--border);
+  background:transparent;color:var(--muted);transition:all .15s;
+  font-family:inherit;
+}
+.filtro-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* LISTA INFORMES */
+.informes-lista{display:flex;flex-direction:column;gap:10px}
+.informe-item{
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:12px;padding:16px 18px;
+  display:flex;align-items:center;gap:14px;
+  transition:border-color .15s;
+}
+.informe-item:hover{border-color:rgba(110,174,240,.3)}
+.informe-ico{
+  width:42px;height:42px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.informe-ico.semanal{background:rgba(21,76,169,.2)} .informe-ico.semanal i{color:var(--blue);font-size:20px}
+.informe-ico.mensual{background:rgba(26,127,94,.2)} .informe-ico.mensual i{color:var(--green);font-size:20px}
+.informe-info{flex:1}
+.informe-tipo{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+.informe-tipo.semanal{color:var(--blue)}
+.informe-tipo.mensual{color:var(--green)}
+.informe-fecha{color:#fff;font-size:14px;font-weight:500}
+.informe-btn{
+  background:rgba(21,76,169,.2);color:var(--blue);
+  border:0.5px solid rgba(110,174,240,.3);border-radius:8px;
+  padding:8px 14px;font-size:12px;font-weight:500;
+  text-decoration:none;display:inline-flex;align-items:center;
+  gap:6px;transition:all .15s;white-space:nowrap;
+}
+.informe-btn:hover{background:var(--navy);color:#fff}
+.informe-btn i{font-size:14px}
+
+/* ESTADO VACÍO */
+.empty{
+  text-align:center;padding:48px 24px;
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:12px;
+}
+.empty i{font-size:40px;color:var(--muted);display:block;margin-bottom:12px}
+.empty-title{color:var(--soft);font-size:15px;font-weight:500;margin-bottom:6px}
+.empty-sub{color:var(--muted);font-size:13px}
+
+/* LOADING */
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+.loading i{font-size:24px;display:block;margin-bottom:10px;color:var(--blue)}
+
+/* BONO CARD */
+.bono-card{
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:12px;padding:20px;margin-bottom:24px;
+  display:flex;align-items:center;gap:16px;
+}
+.bono-card-ico{
+  width:48px;height:48px;border-radius:12px;
+  background:rgba(21,76,169,.2);display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;
+}
+.bono-card-ico i{color:var(--blue);font-size:24px}
+.bono-info{flex:1}
+.bono-titulo{color:#fff;font-size:15px;font-weight:600;margin-bottom:4px}
+.bono-sub{color:var(--muted);font-size:12px}
+.bono-horas{text-align:right}
+.bono-num{font-family:'DM Serif Display',serif;font-size:36px;color:var(--blue);line-height:1}
+.bono-label{color:var(--muted);font-size:11px}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .main{margin-left:0;padding:16px}
+  .bubbles-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="#" class="topbar-brand">
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCADwAPADASIAAhEBAxEB/8QAHQAAAQQDAQEAAAAAAAAAAAAAAAEDBgcCBQgECf/EAE8QAAEDAgIGAwoICwcEAwAAAAEAAgMEBQYRBxIhMUFRE2GyIjNSU3J0gZGSsRQyQmJxgqGzCBUjJUNVY2RzwdEmNTZEdZOUFiTC4UVl8P/EABsBAQACAwEBAAAAAAAAAAAAAAAEBQMGBwIB/8QAOREAAgECAgYIAwcEAwAAAAAAAAECAwQRMQUGEiFRcRMiIzIzNEGxJGHhFFJykaHB0RUWgfBDU/H/2gAMAwEAAhEDEQA/AOOp5pek74/4rflHkE300vjH+0UVHfPqt9wTaAc6ebxr/aKOnm8a/wBoptCAc6ebxr/aKOnm8a/2im0IBzp5vGv9oo6ebxr/AGim0IBzppfGP9oo6aXxj/aKbQgHOml8Y/2ik6aXxj/aKwQgM+ll8Y/2ijpZfGP9orBCAz6WTxj/AGijpZPGP9orBCAz6WXxj/aKOlk8Y/2isEIDPpZfGP8AaKOll8Y/2isEIDPpZfGP9oo6aXxj/aKwQgHOml8Y/wBoo6aXxj/aKbQgHOml8Y/2ijp5vGv9optCAc6ebxr/AGijp5vGv9optCAc6abxr/aKOml8a/2im0IByo759VvuCbTlR3z6rfcE2gBKkVm6HMTwYcBdcKGGtts0xbUMdE172bu7ZmN44jiOvJSrO2dzV6NPAx1Z7EccMSs8usIy6wu36CnsFdRw1lHR22oppmB8UjIGFrmniNifFstP6sof+Oz+ivFq1Ue9VF+RB/qUfunDOXWEZdYXc/4stP6rof8Ajs/ok/Fdq/VlD/x2f0X3+2an/YvyPn9Sj904ZySLszGeCcP4osc1sqqKCmce6gqYIWtkhfwcMssxzbxHXkuTcZYaumFL7NabtDqSs7pkjdrJmHc9h4g/1B2hVWkNF1bJpy3p+pKt7qNbLM0qEIVaSQQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAE9S01RVSmKmglmeGudqxtLjqgZk7OAAJJUj0dYExBjq7/ALLTfk2ZGoqpc2wwNPFzvcBtPALqKg0eWDAOjG/wW6IVFwktNSKqvkb+UlPROzA8BvJo9OZUmhazrb1kY51VDccaISlIoxkHKjvn1W+4JtOVHfPqt9wTaAFLsKxdJZJdmf5Y+4KIqc4GZr2Ob+OfcFcaCWN2l8mR7l4QJTowxzPhG4/i+4yPfZJ3kvGRJp3H5bRy5j0710DTVcVRBHUQSslhlaHxvYcw5p3EFcsXOlB1tikuivHcmGqltmu0jnWiV3cPO00rjx8g8Rw3jiDuVGr0MtmXd9irrUttbUczogS9aXpOta6Kdr2Nkje17HAOa5pzBB3EHiE6JVabBAxPaJFGtIuD7ZjSxuoK3KKpjzdSVQGboXn3tOzMeneFuxIs2v61gr20K0HTmsUz1Co4SUo5nGGKrBc8NXqa03anMNRFt35te07nNPEHmtUuudJ+B6DG9l6F5jp7nACaOrI+Kd+o/mw/Ydo4g8p3y1V9lutRa7nTPpqunfqSRu4HmOYO8Ebwud6T0bOxqYZxeT/AN9TYLa5VaPzPEhCFWEkEIQgBCEIAQhCAEIQgBCEDagBW1oa0L3fGboLvd+ktmHydbpch0tSAd0YPD5x2cs1Lvwd9D1pulpo8Z4ldHXQzFzqS3gHU7lxbrS+FtacmjZzJ3Lox72sYGMaGNaMmtaMgANwA4K0tNHueE6mRGq18N0TwWK02nDtnhtFkooqKih+LHGN54ucd7nHiTt9Gxa/Hz88D4g/0yp+6ctnLIc960WOX54Iv+3/AOMqfunK5cFGDSIieLOFSkSuSLUi0HKjvn1W+4JtOVHfPqt9wTaAFYOjxmtYZvOD7gq+Vj6NW52Cfzg9kK71f84uTI134Z6q6HPPYtDX0ueexS2rjzz2LUVUOeexbnVp4lfCWBu9FWO32SVljvUxNuccqeZ234O4ncfme5XayUEAgggjMEHMFcv1tKHA9yplo1x860TwYevkxNG7uaaoee88muPg8jw+jd5oXat8IVX1fR8Pp7GOvQ2+tDMvNsnWnWyrXRyggEHYnWvVw4lebBkqh2lbANHja2B8Bip7xTtypp3bA9vi3nlyPA9SkzZE6yTrUO6tKdzTdOosUzLSqSpy2onGF1oKy13Ge319PJT1VO8sljeMi0heVdPaX9H0GMKH8YW5rIr7AzJjtwqmjdG4+F4LvQdmWXM1VBNS1ElPURPimicWPY8ZOa4bCCOBXN9I6PqWNXYll6PibDb141o4rMaQhCrzOCEIQAhCEAIQhACVvxgkSt3oDtT8Ht+WhuwD9lJ969TOaXrUC0BPy0P2EfspPvXqYSybd63C3j2MeS9iqm+szKSTatLjd/8AYq/f6bUfdOXvfJt3rT41f/Yu+f6dUfduXqouqz5HM4mKRKUi00thyo759VvuCbTlR3z6rfcE2gBWZovbnh+fzl3ZaqzVoaKhnh6o85d2Wq91d86uTIt54RvKiPetZUw71vJmbCvDPGt9lDEqkzQzwZqI4tj6OsiHNmf2qfyxdShGO26twgH7L+a1/T0MLRv5omWssZk60P6Quh6LD98m/J7G0tQ8/F5MceXI+hXOyRcdjYri0R6QTIIrBe5/ymxtLUPPxuTHHnyPoWHQGnMra4fJ/s/2PF7Z/wDJD/JcwlWYmy4rXmVMz1QY0klbk0VSRuDWNaNpHpVcaXsDU+KWOu9oDI71Gzu49gFWBuHlgbjx3HmrMwxh5txhjuN1kkFO/bFTxu1XPHhOdvaDwA2nmAprQ22yQsEcVmtrG5bjTNcfSXZk+tU+kKdG5pulOOK48ORIozdKW0mfPuaKSGV8UrHRyMcWua4ZFpGwgjgVguzdKOhLC2MmVFxtjGWS9yDWE0WfQSuy/SM25Z+E3I8SCuQsR2a44fvdXZrtTOpq2kkMcsbuBHEHiCMiDxBBXPLuzqWssJZcS9o141VuNehCFEMwIQhACEIQAlbvSJW70B2BoKky0R2IfspPvXqWyy7VCNCEmroosYz/AET/AL16lM0u3et2to9jDkvYqKnfY86batRjOUHBt7H/ANfP925eh0u3etXi+XPCF5H7hP8AduX2quoxHNHHpSJSkWkFuOVHfPqt9wTacqO+fVb7gm0AK09Eozw7UedO7LVVitbREM8OVPnTuy1X2rfnlyZEvfCJPKxeWWNbCRu9ed7F0Nop0zWSRbVANI7dS6U4/Yf+RVlvjVdaUW6t3ph+7/8AkVQaxRwsnzRMs32pEEoJBzByKRC56W5cuirHhro47HeJh8KaNWmnce+DwSfC5c1PRlV3WjoXOybPOxjvoJ2/YuXmOcxwc0kEHMEcFaeBMdPmmo2XB+dbSSseyQ/pmtOeR+dl61uuhdObcPs9d7/R8fk/nwKq6s8HtwOohUNHxcmtGxoG4Abh6k7DV5EbVH2V8U0TJoXh8UjQ5jhxB2hZNq9u9bP0CaKjaZLoKzryXP34W2F6itrrVia20Msz3QPp610TdYgMyLHEDbsa4gngAFbkVbkN6imM7uai/wBDQQyEmlYZZMjuc/LIfTqtz9IVXf6Njc0+jbwJNtWdOeKORSEi6jv+jbDeL4XSywfALi4bKumaASfnt2B/2HrVFaRNHuIcE1YFzpxLRyHKCshzMUnVn8k9R2rSr/RVeyeMt8eK/wB3F3RuYVdyzIihCFWEgEIQgBK3ekSt3oDqvQvLq6LrKP2b/vHqTSy9ah2h5+WjOzj9m/7xykksu3et7tl2EOS9inqd98x10u1azFkmeE7wP3Gf7sp90m3etbiqTPC122/5GbsFKq6jEc0cqFIlKRaIXA5Ud8+q33BNpyo74PJb2Qm0AK2dD4zw3U+dO7LVUytvQ6P7NVPnbuy1X+rfnlyZEvfCJdI0JhzQvW8JotXRcClxPMWBVppaGre6Ufuw7TlaWqqw0wDK+0nmo7TlQ6yL4B80S7F9qQhCELnJdAnqIF1ZC0EgmRozB60ynaV2pUxP8F4P2r7HNBlpYL0m1GH55bLe45Kikglexkjfjx5OPrCsam0iYSniEovdPHmM9WQFrh6NqoTSPTClxjXBjco5i2dnWHtDv5lR7M81stLWG7s26MsJJPDfmV87ClVwlliX5i3TBaqGlfDYs6+rIybI5urEw89u130KB2PSbWUtY+ouNCysdJJrySB5a9xO88lXyFDr6fvatTbUsPksv1MtOypQjhgdUaPtJOEr1LHTfDvgFU7YIqvJgceQduP2K2Kq22+8Wma2XWkiq6KobqyxSDNrhw/9ELgAEhWfoo0w33CE8NDcZZbnZR3Jge7OSEc43Hd5J2fQp1DT/Sro7lZ+q/dEerY7PWps9GnbRLU4IqvxvaBJU4fnfk1x2vpXHcx/MHg7juO3fU675s90w9jjCrpaZ8FztVbGY5Y3DgRtY4bwR6wuPtM2BKjAmLJKJpfLbqjOWhmdvczP4pPhN3H0Hiq7SVgqPa0t8H+n0M9rcOfUnmiDoQhVBMBK3ekSjeEB0tojky0cWgZ/o3/eOUhlk271FNFMmWj21Dkx/bcpBLKt/tV8PDkvYpqnffMcdJtWuxNIThm6jP8AyU3YKddJtXgxHJnhu6eZy9gr5VXUYjmjmopEpSLQS5HKjvg8lvZCbTlR3weS33BNoAVuaG/8NVPnbuy1VGrb0Of4aqfO3dlqv9WvPLkyJe+ETRywIWbliujIpDHLaqu0yjK/Ufmg7blaY3qrdM/9/wBH5oO25UOsvkHzRLsfGRBEIQucF2CAhCAsHSXR/DML4bxLENZs1KKad3zmDYT6Mx6FXyuPR1TMxborr8Nkg1MDndBnwf8AGjPpObfSVT88UkMz4ZWOZIxxa5rhkWkbCCrLSNLuVllNL81uZgoyzhwMEIQq0zghCEBLtF+PLvgW/MraKR8tHI4CrpC4hkzf5OHA8PoXSukS22vStosFVZ5GzTanwqgfl3TZGjuo3cidrSOeS48Vqfg8Y6dhrEn4or6gstVxcGnWOyKb5L+rPcfRyVvoy7Sxtq3clu5Mh3NFvtIZoq2Rjo5HMe0tc0kEHgVirF/CDw8yx6Q6menj1KS5NFXFkNgLjk8D6HA+ghV0q2vRlRqSpyzTJNOanFSXqCUbwkSjeFiPZ0DowflgK2D5ju25b2WTbvUZ0bSZYGtoz+Q7tuW6kk2710O1Xw9PkvYpqnffMfMi8OIZM8PXIfukvYKyMnWvHfn52C4j90l7JXmt3GI5o5+KRKUi58XI5Ud8Hkt7ITacqO+DyW9kJtACtrQ9/hup87d2WqpVbGh8/wBnKnzp3Zar/Vvzy5MiXvhE1JSZpCUma6OikMwqt00f3/R+aDtuVotKq3TN/f8AR+aDtuVBrL5B80S7HxiCoQhc4LsEIQgJ3oSvYtWMI6WV+rBXt6E57tfe37cx6Vu9PmE30dyGJ6KI/Ba12VUGjvc3hHqdv8oHmFVkUj4pGyRuLXtIc1w3gjcV0/gO7W7HmBzFXxsmEkfweuh5Py3jlnscDz+hbDoyMb62lZyfWW+P7kG4bo1FVWWTOXUKU6R8G3DB97fS1DHvopXOdSVPCVmf2OHEKLKhq0p0puE1g0TIyUligQhC8HoEoORzSIQFsY2uYxjobtN4lcH3Ky1PwSqJ3lr2gB3p1WH6c1U6lGCa0/i6/WSRxMVwoHua39rF+UZ2XBRg71Mu6nTbFR5tYPmt3tgYqUdjGPoIlG8JEo3hQzKXdo8flgu3D5ju25bmSTao9gF+WD7ePmO7RW3kk2ro1qvhqf4V7FNU775j2uvLe3/mK4D91k7JSiRea8vzslf5tJ2SsdbuM+xzRRqEIXPS4HKjvg8lvZCbTlR3weS33BNoAVraITlh2o86d2WqqVaeiU5YfqPOT2Wq+1b88uTIl74TJrmgFN6yUFdHTKUdadqq7TKfz/SeaDtuVnNcqw0xHO/0nmo7TlQ6y+RfNEux8Yg6EIXOC6BCEIAUu0W4vlwjiFtQ/WfQz5R1UY8Hg4dY3qIoWWhWnQqKpB4NHmcFOLizsa6W6y4tw78FrY462gqmCSN7TtGY7l7DwO3f6DnuXOekfRrecJzSVUTXV9pJ7iqjbtYOAkHyT17jwPAbXQ7pIOHXts15e99qe78nINpp3H3t58l0JHUw1FM2SJ8c8EzMw4ZOY9pHqIK3N0bXTlHpF1aiz+vFcCp2qlnPDOJxYhdIYv0UYXvDn1NAH2eqdtPQDWhcethPc+g+hVtdtEGIqPWdTVltrGDcGyljz6HD+a1250LeUH3MVxW/6k+nd0p+uBXCdZBM9usyKRw5hpK6T0S6GbXZ4I7njGmir7m7JzKJx1oafygPjv6vijrV10FTHRwiCjjipYRsEcEbY2AeS0AKRbav16sNub2cfzMFXSEIPCKxOCrPUuoLpBO7YGv7rPkdh+wleIruDG+BMIY0onxXa1wRVbgejrqWNsc7DzJAAeOp2f0hci6S8GXLA2JpLPcHNlYW9LT1DB3M0Z3OHI8COBUO+0dWtEtrfHiZ6FzCtlmRhKN4SJRvVaSS3sDPywnQj5ru0VtXvWiwU/LC9EPmu7RW1e9dHtPLU/wr2Kap33zHg/avPeH/AJmrtv8Al5OyUB6892f+aKzzeTsleK/cZ9jminUIQudlwOVHfB5LfcE2nKjvg8lvZCbQArQ0UHKwVHnJ7IVXqzdFhysVR5yeyFfaueeXJkS98ImeslDkzrJQ5dFTKYfa5VjpfOd+pfNR2nKymuVZ6WznfqbzUdpyodZH8C+aJdl4pDEIQudFyCEIQAhCEAKc6ONI1zwq9tHPrVlqLu6gce6j5lh4Hq3FQZCzW9xUt5qpTeDPE4RmtmSOrrJiWz4govhVprWTADN8Z2SM6nN3j3IoalsuJqGCTIs6QvIPHVaXD7QFyxQ1lVQ1DaijqJYJm7nxuLSFO8HaRbjBiK3S3d8c0LJQ18pGq4NcC0k5bDvW32eslOrhCusHxWX0K2rYOOLg8TqA1R3l20pWVZz+MtH8KDmhzXZtIzBB2EJBU7d63Hok0UmJJ4azbvUC094bo8VYao3OlENxppyyklccmHXbmWO5Alo28D1ZreMrMuKi+kC6iR9DbGOBcHGeUDgMsm+vNyg3tnTrU3Ca3MkW9SUZpo5ir6Sooayajq4XwzwvLJI3jItI3gpkb1d2OsJx4pom1NLqx3eBmrG47BUtG5jj4Xgu9B4EUnNFJDO+GZjo5GOLXscMi0g5EEcCucaS0dUsauxLJ5PibFQrRqxxRZuD3ZYaox809orZuetJhR+WHaQfNPaK2JkW6Wj+Gp/hXsV1Tvs9AemLq/8ANVZ/Af2SsRImrm/811f8B/ZK81u4xHNFWIQhc8LccqO+fVb7gm05Ud8Hkt9wTaAFZOjA5WOfzg9kKtlYujQ5WWfzg9kK91d86uTIt54RMA5ZByYDlkHLoSZTtHoa5VtpXOd9pvNh2nKxGuVZ6S6unqr8wQStk6KERv1dwdmTl9qotZJJWTTebRKsl2pFkIQuelwCEIQAhCEAIQhACEIQFp6MtIslHBFZrz0k0LcmwTN2vaPBI4jlx+lWWzE9jezXF1pmjk9xaR6DtXMQJBzByKneC71FcHNt9eQKgD8m8nvnUetbpoLTs8FbVXv9G/b+Cqu7KLe3H/JaNzxrRxMMdra6tnOwOLS2JvWScifoHrC0VB8ImqZKurldLUSu1nvdxP8AIdSIaNjTnqr2RMDdy2vCUntTZBSjFYRNhBJkFFtJOE/x9E68W1gN0iZnNE0balgHxhzeB6wOYUhY7JPRyuaQ5riCCCCDkQVivbKleUXSqf8AjPVKrKnLaRW2HH6lhpWnYQ0+8r2mRSDFNobUQSXK2xBs8eb6mnjbkHt4yMA4je5o+kcQolHKHNzB3qrjTlQhGlLNJIk7Sm9pHuEibuD/AM21X8F/uKZa9Y1rvzfUj9i73FYqr6jPUVvK8QhC58Ww5Ud8Hkt9wTacqO+DyW+4JtACsLRsfzLP5weyFXqsDRwcrNN/HPZCvNXvOrkyLd+GSsFZh3NMF4a0ucQABmSTsCg+LcUOnL6G2yFsO6SUb39Q6luV9pClZU9uefouJXUqMqjwR68Y4q1Q+32yTuviyzNO7qb/AFUGJJOZ3pELnt7fVbypt1HyXAt6VKNOOCBCEKGZAQhCAEIQgBCEIAQhCAFkxzmPD2OLXNOYIORBWKEBaGBcTtucbaGueBWsHcuP6Uf1UuBVCQyyQytlieWPYc2uByIKtLBWJm3eD4NVOa2tjG3h0g5jr5re9Bab6ZK3rvrej4/X3Kq7tdnrxyJWHJQ5MayNbrW04kDA9Ucr45GyRvLXtOYIO0FRnF1mDGyXm3RtbCTnVQMGQhcT8cDwCfUTluyW9DutOQzOifrNI3FpBGYcCMiCOII4LBcUVWjh6nuEnBldskz4oq3/APY1H8J3uW3xZZW0DhcLew/AJHAOZnmad5+ST4J+SfQdu/QVL86Kfb+jd7lQV04KUZZk2GDwaIYhCFoJaDlR3weS3shNpyo74PJb7gm0AKeaP5GRWSokkcGsbMSSTkB3IUDXpFbUCh+BNeWwl5e5o+Uev1Kdo67VpW6VrHczFWp9JHZN5irEj68upKMllLn3TuMn/pRpCFhubmpc1HUqPFnqEFBYIEIQo57BCEIAQhCAEIQgBCEIAQhCAEIQgBOU08tNOyeCR0cjDm1zTtBTaF9TaeKBa+EMRR3ml6OUtZWRj8owfKHhD/8AbFvtZUhR1M9HUsqKaR0crDm1wKl7MfThjQ+giLstpDyMyt20brHT6LZunhJevH6lZXs3tYwyLA1lkHKvv+vpv1fH/uFH/X036vj/ANwqw/uGw+/+j/gw/Y6vAsNkgAeySNksUjSySN4za9p3gqD4qtD7WJJIS6Shna8wvO0t2bWO+cPt3ryjH836vj/3Cm6zHUlTQ1FHJboXRzsLSHPJAOWxw6xwKh3mmLCvB4T38n/BlpW9WDy3EMQhC0QtByo74PJb7gm09UMf0g7l3xW8PmhN6jvBPqQGKFlqu8E+pJqu8E+pAIhLqu5H1IyPIoBEJcjyKNV3I+pAIhLqu5H1I1Xcj6kAiEuq7kfUjVdyPqQCIS6ruR9SMjyKARCXVdyPqRqu5H1IBEJdV3I+pGq7kfUgEQl1TyPqRqnkfUgEQlyPIoyPIoBEJcjyKMjyKARCXI8ijI8igEQlyPIo1TyPqQCIS6rvBPqS6rvBPqQH/9k=" alt="N">
+    <div><span class="t1">NEXO</span><span class="t2">Académico</span></div>
+  </a>
+  <div class="topbar-right">
+    <span class="topbar-name" id="topbar-name">Cargando...</span>
+    <div class="avatar" id="topbar-av">?</div>
+  </div>
+</div>
+
+<div class="sidebar">
+  <div class="nav-item active" onclick="showSection('inicio')">
+    <i class="ti ti-home"></i> Inicio
+  </div>
+  <div class="nav-item" onclick="showSection('informes')">
+    <i class="ti ti-file-analytics"></i> Mis informes
+  </div>
+  <div class="nav-item" onclick="showSection('profesor')">
+    <i class="ti ti-user"></i> Mi profesor
+  </div>
+  <div class="nav-item" onclick="showSection('estudiar')">
+    <i class="ti ti-book"></i> Estudiar
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- INICIO -->
+  <div class="section active" id="sec-inicio">
+    <div class="page-title" id="saludo">Buenas 👋</div>
+    <div class="page-sub">Bienvenido a tu área privada de Nexo Académico</div>
+
+    <div class="bubbles-grid">
+      <div class="bubble" onclick="showSection('informes')">
+        <div class="bubble-ico"><i class="ti ti-file-analytics"></i></div>
+        <div class="bubble-title">Mis informes</div>
+        <div class="bubble-sub">Semanales y mensuales</div>
+        <div class="bubble-badge" id="badge-informes">0</div>
+      </div>
+      <div class="bubble green" onclick="showSection('profesor')">
+        <div class="bubble-ico"><i class="ti ti-user-check"></i></div>
+        <div class="bubble-title">Mi profesor</div>
+        <div class="bubble-sub">Perfil y contacto</div>
+      </div>
+      <div class="bubble amber" onclick="showSection('estudiar')">
+        <div class="bubble-ico"><i class="ti ti-book-2"></i></div>
+        <div class="bubble-title">Estudiar</div>
+        <div class="bubble-sub">Material y tests</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFORMES -->
+  <div class="section" id="sec-informes">
+    <button class="back-btn" onclick="showSection('inicio')">
+      <i class="ti ti-arrow-left"></i> Volver
+    </button>
+    <div class="page-title">Mis informes</div>
+    <div class="page-sub">Seguimiento semanal y mensual de tu progreso</div>
+
+    <div class="filtros">
+      <button class="filtro-btn active" onclick="filtrarInformes('todos', this)">Todos</button>
+      <button class="filtro-btn" onclick="filtrarInformes('Semanal', this)">Semanales</button>
+      <button class="filtro-btn" onclick="filtrarInformes('Mensual', this)">Mensuales</button>
+    </div>
+
+    <div id="informes-container">
+      <div class="loading"><i class="ti ti-loader"></i> Cargando informes...</div>
+    </div>
+  </div>
+
+  <!-- PROFESOR -->
+  <div class="section" id="sec-profesor">
+    <button class="back-btn" onclick="showSection('inicio')">
+      <i class="ti ti-arrow-left"></i> Volver
+    </button>
+    <div class="page-title">Mi profesor</div>
+    <div class="page-sub">Tu profesor asignado por Nexo Académico</div>
+    <div id="profesor-container">
+      <div class="loading"><i class="ti ti-loader"></i> Cargando...</div>
+    </div>
+  </div>
+
+  <!-- ESTUDIAR -->
+  <div class="section" id="sec-estudiar">
+    <button class="back-btn" onclick="showSection('inicio')">
+      <i class="ti ti-arrow-left"></i> Volver
+    </button>
+    <div class="page-title">Estudiar</div>
+    <div class="page-sub">Material de apoyo por asignatura</div>
+    <div class="bubbles-grid">
+      <div class="bubble">
+        <div class="bubble-ico"><i class="ti ti-math"></i></div>
+        <div class="bubble-title">Matemáticas</div>
+        <div class="bubble-sub">Temario y ejercicios</div>
+      </div>
+      <div class="bubble green">
+        <div class="bubble-ico"><i class="ti ti-atom"></i></div>
+        <div class="bubble-title">Física</div>
+        <div class="bubble-sub">Temario y ejercicios</div>
+      </div>
+      <div class="bubble amber">
+        <div class="bubble-ico"><i class="ti ti-language"></i></div>
+        <div class="bubble-title">Lengua</div>
+        <div class="bubble-sub">Temario y ejercicios</div>
+      </div>
+      <div class="bubble purple">
+        <div class="bubble-ico"><i class="ti ti-world"></i></div>
+        <div class="bubble-title">Inglés</div>
+        <div class="bubble-sub">Temario y ejercicios</div>
+      </div>
+      <div class="bubble">
+        <div class="bubble-ico"><i class="ti ti-flask"></i></div>
+        <div class="bubble-title">Química</div>
+        <div class="bubble-sub">Temario y ejercicios</div>
+      </div>
+      <div class="bubble green">
+        <div class="bubble-ico"><i class="ti ti-building-bank"></i></div>
+        <div class="bubble-title">Historia</div>
+        <div class="bubble-sub">Temario y ejercicios</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SHEET_ID = '1geGaolsb9FwBKccM529TwKa1dTKbUI9SfeZXGnmIcaQ';
+const API_KEY = 'AIzaSyAumiChL4QQNE2wpo9i-2sFiH_T0K5W6jc';
+
+// Get alumno ID from URL
+function getParam(k) {
+  return new URLSearchParams(window.location.search).get(k);
+}
+const COD = getParam('id') || 'ALU001';
+
+let todosInformes = [];
+
+// Navigation
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  const navItems = document.querySelectorAll('.nav-item');
+  const map = {'inicio':0,'informes':1,'profesor':2,'estudiar':3};
+  if(map[name] !== undefined) navItems[map[name]].classList.add('active');
+  if(name === 'informes' && todosInformes.length === 0) cargarInformes();
+  if(name === 'profesor') cargarProfesor();
+}
+
+// Load informes from Sheets
+async function cargarInformes() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/INFORMES?key=${API_KEY}`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    const rows = data.values || [];
+    todosInformes = rows.slice(1)
+      .filter(r => r[0] === COD)
+      .map(r => ({tipo: r[1], fecha: r[2], link: r[3]}))
+      .reverse();
+    document.getElementById('badge-informes').textContent = todosInformes.length;
+    renderInformes(todosInformes);
+  } catch(e) {
+    document.getElementById('informes-container').innerHTML = `
+      <div class="empty">
+        <i class="ti ti-wifi-off"></i>
+        <div class="empty-title">No se pudieron cargar los informes</div>
+        <div class="empty-sub">Inténtalo de nuevo más tarde</div>
+      </div>`;
+  }
+}
+
+function renderInformes(lista) {
+  const el = document.getElementById('informes-container');
+  if(!lista.length) {
+    el.innerHTML = `<div class="empty">
+      <i class="ti ti-file-off"></i>
+      <div class="empty-title">No hay informes disponibles</div>
+      <div class="empty-sub">Tu profesor aún no ha subido ningún informe</div>
+    </div>`;
+    return;
+  }
+  el.innerHTML = `<div class="informes-lista">` +
+    lista.map(inf => `
+      <div class="informe-item">
+        <div class="informe-ico ${inf.tipo.toLowerCase()}">
+          <i class="ti ${inf.tipo === 'Mensual' ? 'ti-calendar-month' : 'ti-calendar-week'}"></i>
+        </div>
+        <div class="informe-info">
+          <div class="informe-tipo ${inf.tipo.toLowerCase()}">${inf.tipo}</div>
+          <div class="informe-fecha">${inf.fecha}</div>
+        </div>
+        <a href="${inf.link}" target="_blank" class="informe-btn">
+          <i class="ti ti-eye"></i> Ver informe
+        </a>
+      </div>`).join('') + `</div>`;
+}
+
+function filtrarInformes(tipo, btn) {
+  document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if(tipo === 'todos') renderInformes(todosInformes);
+  else renderInformes(todosInformes.filter(i => i.tipo === tipo));
+}
+
+// Load profesor from ALUMNOS sheet
+async function cargarProfesor() {
+  const el = document.getElementById('profesor-container');
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/ALUMNOS?key=${API_KEY}`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    const rows = data.values || [];
+    const alumno = rows.slice(1).find(r => r[0] === COD);
+    if(!alumno) {
+      el.innerHTML = `<div class="empty"><i class="ti ti-user-off"></i><div class="empty-title">No se encontró tu perfil</div></div>`;
+      return;
+    }
+    const nombreProfe = alumno[4] || 'Profesor asignado';
+    el.innerHTML = `
+      <div class="bono-card">
+        <div class="bono-card-ico"><i class="ti ti-user-circle"></i></div>
+        <div class="bono-info">
+          <div class="bono-titulo">${nombreProfe}</div>
+          <div class="bono-sub">Profesor asignado por Nexo Académico</div>
+        </div>
+      </div>
+      <div class="empty" style="margin-top:0">
+        <i class="ti ti-message-circle" style="color:var(--blue)"></i>
+        <div class="empty-title" style="color:#fff">¿Tienes alguna duda?</div>
+        <div class="empty-sub">Contacta con Nexo y lo gestionamos</div>
+        <a href="https://wa.me/34699529399" target="_blank" class="informe-btn" style="margin-top:14px;display:inline-flex">
+          <i class="ti ti-brand-whatsapp"></i> Contactar con Nexo
+        </a>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div class="empty"><i class="ti ti-wifi-off"></i><div class="empty-title">Error al cargar</div></div>`;
+  }
+}
+
+// Init — load alumno name
+async function init() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/ALUMNOS?key=${API_KEY}`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    const rows = data.values || [];
+    const alumno = rows.slice(1).find(r => r[0] === COD);
+    if(alumno) {
+      const nombre = alumno[1] || 'Alumno';
+      const hora = new Date().getHours();
+      const saludo = hora < 14 ? 'Buenos días' : hora < 21 ? 'Buenas tardes' : 'Buenas noches';
+      document.getElementById('saludo').textContent = saludo + ', ' + nombre + ' 👋';
+      document.getElementById('topbar-name').textContent = nombre;
+      document.getElementById('topbar-av').textContent = nombre.charAt(0).toUpperCase();
+    }
+  } catch(e) {}
+  await cargarInformes();
+}
+
+init();
+</script>
+</body>
+</html>
