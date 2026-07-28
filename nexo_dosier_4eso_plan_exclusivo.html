@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexo Académico — Plan exclusivo 4º ESO</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --navy-deep: #04071b;
+    --navy:      #0d1b4b;
+    --cyan:      #0891b2;
+    --teal:      #1a9470;
+    --teal-light:#4fc99a;
+    --amber:     #f59e0b;
+    --cream:     #f4f1e8;
+    --cream-light: #f8f6f2;
+    --white:     #ffffff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'DM Sans', sans-serif;
+    background: linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 100%);
+    color: var(--cream-light);
+    line-height:1.5;
+  }
+  h1,h2,h3 { font-family:'DM Serif Display', serif; font-weight:400; }
+  .wrap { max-width:1100px; margin:0 auto; padding:0 24px; }
+  section { padding:80px 0; }
+  @keyframes fadeUp { from{opacity:0; transform:translateY(24px);} to{opacity:1; transform:translateY(0);} }
+  .fade { animation: fadeUp 0.8s ease both; }
+  .d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}
+
+  header.hero {
+    text-align:center; padding:100px 24px 80px;
+    background: radial-gradient(circle at 50% 0%, rgba(8,145,178,0.18), transparent 60%);
+  }
+  .tag { color: var(--teal-light); text-transform:uppercase; letter-spacing:2px; font-size:13px; font-weight:600; }
+  .hero h1 { font-size:42px; margin:18px 0; color:var(--white); }
+  .hero p.sub { max-width:620px; margin:0 auto; color:rgba(244,241,232,0.75); font-size:17px; }
+  .cta {
+    display:inline-block; margin-top:32px; padding:14px 30px; border-radius:10px;
+    background: var(--teal); color:var(--white); text-decoration:none; font-weight:600;
+    box-shadow:0 8px 24px rgba(26,148,112,0.35); transition:transform .2s;
+  }
+  .cta:hover{ transform:scale(1.03); }
+
+  .kpis { display:flex; justify-content:center; gap:48px; margin-top:56px; flex-wrap:wrap; }
+  .kpi { text-align:center; }
+  .kpi .num { font-family:'DM Serif Display',serif; font-size:34px; color:var(--amber); }
+  .kpi .label { font-size:13px; color:rgba(244,241,232,0.6); }
+
+  .card {
+    background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px; padding:28px; backdrop-filter: blur(6px);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: scale(1.02); box-shadow:0 12px 30px rgba(8,145,178,0.15); }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  @media (max-width:720px){ .grid2,.grid3{ grid-template-columns:1fr; } }
+
+  .section-label { color:var(--cyan); text-transform:uppercase; letter-spacing:2px; font-size:12px; font-weight:600; margin-bottom:10px; }
+  .section-title { font-size:30px; color:var(--white); margin-bottom:36px; }
+
+  .feature-icon { font-size:26px; margin-bottom:12px; }
+  .feature h3 { font-size:18px; color:var(--white); margin-bottom:8px; font-family:'DM Sans',sans-serif; font-weight:600; }
+  .feature p { color:rgba(244,241,232,0.7); font-size:14.5px; }
+
+  table.pricing { width:100%; border-collapse:collapse; margin-top:20px; }
+  table.pricing th, table.pricing td { padding:14px 16px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.08); }
+  table.pricing th { color:var(--cyan); font-size:13px; text-transform:uppercase; letter-spacing:1px; font-weight:600; }
+  table.pricing td { font-size:15px; }
+  table.pricing tr.highlight td { background: rgba(26,148,112,0.12); }
+  .price-old { text-decoration:line-through; color:rgba(244,241,232,0.4); font-size:14px; }
+  .price-new { color:var(--teal-light); font-weight:700; font-size:17px; }
+  .badge { display:inline-block; background:var(--amber); color:var(--navy-deep); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; margin-left:8px; }
+
+  .chart-box { background:rgba(255,255,255,0.04); border-radius:16px; padding:24px; margin-top:30px; border:1px solid rgba(255,255,255,0.08); }
+
+  .placeholder { color: var(--amber); font-style:italic; }
+
+  .price-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:24px; }
+  .price-card {
+    background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px; padding:22px 18px; text-align:center; position:relative;
+    transition: transform .2s;
+  }
+  .price-card:hover { transform: scale(1.02); }
+  .price-card.highlight-card { border-color: rgba(79,201,154,0.5); background: rgba(26,148,112,0.10); }
+  .price-card-top { font-size:13px; color:var(--cyan); text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:12px; }
+  .price-hour { font-family:'DM Serif Display', serif; font-size:36px; color:var(--white); line-height:1; }
+  .price-hour span { font-size:16px; color:rgba(244,241,232,0.6); font-family:'DM Sans',sans-serif; }
+  .price-old-hour { text-decoration:line-through; color:rgba(244,241,232,0.4); font-size:13px; margin-top:6px; }
+  .price-monthly { font-size:13px; color:rgba(244,241,232,0.7); margin-top:14px; line-height:1.4; }
+  .price-monthly strong { color: var(--teal-light); }
+  .badge { display:inline-block; background:var(--teal); color:var(--white); font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; margin-top:14px; }
+  .badge.amber { background: var(--amber); color: var(--navy-deep); }
+
+  footer { text-align:center; padding:60px 24px; border-top:1px solid rgba(255,255,255,0.08); color:rgba(244,241,232,0.55); font-size:14px; }
+  footer a { color:var(--teal-light); text-decoration:none; }
+
+  @media (max-width:720px) {
+    section { padding:52px 0; }
+    header.hero { padding:64px 20px 56px; }
+    .hero h1 { font-size:28px; }
+    .hero p.sub { font-size:15px; }
+    .section-title { font-size:23px; }
+    .kpis { gap:26px; }
+    .kpi .num { font-size:26px; }
+    .price-grid { grid-template-columns:1fr 1fr; }
+    .price-hour { font-size:28px; }
+    .grid3, .grid2 { grid-template-columns:1fr; }
+  }
+  @media (max-width:420px) {
+    .price-grid { grid-template-columns:1fr; }
+    .hero h1 { font-size:24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap fade">
+    <div class="tag">Plan exclusivo · 4º ESO · Presencial</div>
+    <h1>Vuestro plan exclusivo de 4º ESO</h1>
+    <p class="sub">Todas las asignaturas de 4º ESO — incluidas Valenciano, Francés e Inglés — en un único plan diario, con seguimiento real y un profesor de referencia todo el curso.</p>
+    <a class="cta" href="https://wa.me/34699529399?text=Hola%20Manu%2C%20quer%C3%ADamos%20confirmar%20el%20plan%20exclusivo%20de%204%C2%BA%20ESO.">Confirmar plan por WhatsApp</a>
+
+    <div class="kpis">
+      <div class="kpi"><div class="num">5</div><div class="label">días / semana</div></div>
+      <div class="kpi"><div class="num">1h30</div><div class="label">por sesión</div></div>
+      <div class="kpi"><div class="num">30h</div><div class="label">bono mensual</div></div>
+      <div class="kpi"><div class="num">25%</div><div class="label">descuento máximo</div></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="section-label fade">El plan</div>
+    <h2 class="section-title fade">Cómo va a funcionar el curso</h2>
+    <div class="grid3">
+      <div class="card fade d1">
+        <div class="feature-icon">📅</div>
+        <h3>5 sesiones semanales</h3>
+        <p>1h30 cada día, de lunes a viernes. Cubrimos todas las asignaturas de 4º ESO repartidas según lo que necesite cada semana: Matemáticas, Física y Química, Lengua, Valenciano, Francés e Inglés.</p>
+      </div>
+      <div class="card fade d2">
+        <div class="feature-icon">🔄</div>
+        <h3>Sustitución sin perder el hilo</h3>
+        <p>Si el profesor no puede dar una sesión, la cubrimos con acceso al historial completo. El plan no se para en ningún momento del curso.</p>
+      </div>
+      <div class="card fade d3">
+        <div class="feature-icon">📊</div>
+        <h3>Seguimiento real, no opiniones</h3>
+        <p>Cada sesión se registra con datos objetivos: qué se trabajó, cuántos ejercicios solo/con ayuda/sin resolver, dónde está el error. Nada de "va bien" sin más.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label fade">Todo lo que incluye</div>
+    <h2 class="section-title fade">Acceso completo a la app Nexo</h2>
+    <div class="grid3">
+      <div class="card fade d1">
+        <h3>📱 Área privada del alumno</h3>
+        <p>Acceso permanente desde <a href="https://nexoacademico.es" style="color:var(--teal-light)">nexoacademico.es</a> a todo el histórico de sesiones, informes y material, en cualquier momento del curso.</p>
+      </div>
+      <div class="card fade d2">
+        <h3>📈 Informe mensual completo</h3>
+        <p>Análisis del mes: qué se ha trabajado por asignatura, evolución real, patrones de trabajo y objetivos para el mes siguiente. Redactado en lenguaje claro para la familia, sin jerga técnica.</p>
+      </div>
+      <div class="card fade d3">
+        <h3>📝 Resúmenes y esquemas del profesor</h3>
+        <p>Material de apoyo por asignatura y tema, generado a partir de lo trabajado en cada sesión — no genérico, sino adaptado a lo que ha visto el alumno.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label fade">Vuestra tarifa</div>
+    <h2 class="section-title fade">De la tarifa estándar a vuestro plan exclusivo</h2>
+    <p class="fade" style="color:rgba(244,241,232,0.75); max-width:700px; margin-bottom:10px;">
+      Nuestra tarifa de referencia en ESO presencial es de <strong>22,50 €/hora</strong> (el precio del bono de 12h, nuestro mejor precio estándar). Por el volumen y la continuidad de este plan durante todo el curso, aplicamos un descuento adicional sobre esa tarifa que <strong>crece cada mes</strong> que seguís con nosotros.
+    </p>
+
+    <div class="price-grid fade d1">
+      <div class="price-card">
+        <div class="price-card-top">Bono 1 · mes 1</div>
+        <div class="price-hour">20,25 <span>€/h</span></div>
+        <div class="price-old-hour">antes 22,50 €/h</div>
+        <div class="price-monthly">Bono 30h: <strong>607,50 €</strong> · 2 plazos de 303,75 €</div>
+        <div class="badge">-10%</div>
+      </div>
+      <div class="price-card">
+        <div class="price-card-top">Bono 2 · mes 2</div>
+        <div class="price-hour">19,13 <span>€/h</span></div>
+        <div class="price-old-hour">antes 22,50 €/h</div>
+        <div class="price-monthly">Bono 30h: <strong>573,75 €</strong> · 286,88 € + 286,87 €</div>
+        <div class="badge">-15%</div>
+      </div>
+      <div class="price-card">
+        <div class="price-card-top">Bono 3 · mes 3</div>
+        <div class="price-hour">18,00 <span>€/h</span></div>
+        <div class="price-old-hour">antes 22,50 €/h</div>
+        <div class="price-monthly">Bono 30h: <strong>540,00 €</strong> · 2 plazos de 270,00 €</div>
+        <div class="badge">-20%</div>
+      </div>
+      <div class="price-card highlight-card">
+        <div class="price-card-top">Bono 4 en adelante</div>
+        <div class="price-hour">16,88 <span>€/h</span></div>
+        <div class="price-old-hour">antes 22,50 €/h</div>
+        <div class="price-monthly">Bono 30h: <strong>506,25 €</strong> · 253,13 € + 253,12 €</div>
+        <div class="badge amber">-25% MÁXIMO</div>
+      </div>
+    </div>
+
+    <p class="fade" style="color:rgba(244,241,232,0.6); font-size:14px; margin-top:18px;">
+      A partir del bono 4, el 25% de descuento se mantiene durante todo el resto del curso, incluidas las horas extra que puedan necesitarse en el tramo final (repaso de exámenes finales / selectividad), también a 16,875 €/hora.
+    </p>
+
+    <div class="chart-box fade d2">
+      <canvas id="chartPrecio" height="90"></canvas>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label fade">Garantías</div>
+    <h2 class="section-title fade">Lo que garantizamos durante todo el curso</h2>
+    <div class="grid3">
+      <div class="card fade d1"><div class="feature-icon">⚡</div><h3>Continuidad asegurada</h3><p>Un profesor de referencia todo el año, con historial y planificación compartidos si hay sustitución.</p></div>
+      <div class="card fade d2"><div class="feature-icon">🔄</div><h3>Cambio sin coste</h3><p>Si el profesor no encaja, lo cambiamos sin perder horas del bono ni empezar de cero.</p></div>
+      <div class="card fade d3"><div class="feature-icon">📊</div><h3>Informe mensual sin falta</h3><p>Cada mes sabéis exactamente cómo va cada asignatura, con datos y no con impresiones.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="fade">
+  <p>Nexo Académico · Clases particulares · Valencia</p>
+  <p style="margin-top:8px;"><a href="https://wa.me/34699529399">699 52 93 99</a> · <a href="mailto:nexoacademicopremium@gmail.com">nexoacademicopremium@gmail.com</a> · <a href="https://nexoacademico.es">nexoacademico.es</a></p>
+  <p style="margin-top:14px; font-size:12px; opacity:0.6;">Plan exclusivo generado para esta familia · No aplica a otros alumnos ni bonos estándar</p>
+</footer>
+
+<script>
+  const ctx = document.getElementById('chartPrecio').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Bono 1', 'Bono 2', 'Bono 3', 'Bono 4+'],
+      datasets: [{
+        label: 'Precio del bono (30h)',
+        data: [607.5, 573.75, 540, 506.25],
+        backgroundColor: ['#0891b2', '#0891b2', '#0891b2', '#4fc99a'],
+        borderRadius: 8
+      }]
+    },
+    options: {
+      plugins: { legend: { display:false } },
+      scales: {
+        x: { ticks:{ color:'#f4f1e8' }, grid:{ display:false } },
+        y: { ticks:{ color:'rgba(244,241,232,0.6)' }, grid:{ color:'rgba(255,255,255,0.08)' } }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
