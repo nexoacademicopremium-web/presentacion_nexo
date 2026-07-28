@@ -89,7 +89,9 @@
     transition: transform .2s;
   }
   .price-card:hover { transform: scale(1.02); }
-  .price-card.highlight-card { border-color: rgba(79,201,154,0.5); background: rgba(26,148,112,0.10); }
+  .price-card.highlight-card { border-color: rgba(245,158,11,0.6); background: rgba(245,158,11,0.08); transform: scale(1.06); box-shadow: 0 10px 30px rgba(245,158,11,0.18); }
+  .price-card.highlight-card:hover { transform: scale(1.08); }
+  .price-hour.big { font-size:38px; color: var(--amber); }
   .price-card-top { font-size:13px; color:var(--cyan); text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:12px; }
   .price-hour { font-family:'DM Serif Display', serif; font-size:26px; color:var(--white); line-height:1; }
   .price-hour span { font-size:16px; color:rgba(244,241,232,0.6); font-family:'DM Sans',sans-serif; }
@@ -112,6 +114,8 @@
     .kpi .num { font-size:26px; }
     .price-grid { grid-template-columns:1fr 1fr; }
     .price-hour { font-size:22px; }
+    .price-hour.big { font-size:28px; }
+    .price-card.highlight-card { transform: scale(1); }
     .grid3, .grid2 { grid-template-columns:1fr; }
   }
   @media (max-width:420px) {
@@ -195,38 +199,44 @@
       <div class="price-card">
         <div class="price-card-top">Bono 1 · mes 1</div>
         <div class="price-hour">20 <span>€/h</span></div>
-        <div class="price-old-hour">antes 22,50 €/h</div>
-        <div class="price-monthly">Bono 30h: <strong>607,50 €</strong> · 2 plazos de 303,75 €</div>
         <div class="badge">-10%</div>
       </div>
       <div class="price-card">
         <div class="price-card-top">Bono 2 · mes 2</div>
         <div class="price-hour">19 <span>€/h</span></div>
-        <div class="price-old-hour">antes 22,50 €/h</div>
-        <div class="price-monthly">Bono 30h: <strong>573,75 €</strong> · 286,88 € + 286,87 €</div>
         <div class="badge">-15%</div>
       </div>
       <div class="price-card">
         <div class="price-card-top">Bono 3 · mes 3</div>
         <div class="price-hour">18 <span>€/h</span></div>
-        <div class="price-old-hour">antes 22,50 €/h</div>
-        <div class="price-monthly">Bono 30h: <strong>540,00 €</strong> · 2 plazos de 270,00 €</div>
         <div class="badge">-20%</div>
       </div>
       <div class="price-card highlight-card">
         <div class="price-card-top">Bono 4 en adelante</div>
-        <div class="price-hour">16 <span>€/h</span></div>
-        <div class="price-old-hour">antes 22,50 €/h</div>
-        <div class="price-monthly">Bono 30h: <strong>506,25 €</strong> · 253,13 € + 253,12 €</div>
+        <div class="price-hour big">16 <span>€/h</span></div>
         <div class="badge amber">-25% MÁXIMO</div>
       </div>
     </div>
 
-    <p class="fade" style="color:rgba(244,241,232,0.6); font-size:14px; margin-top:18px;">
-      A partir del bono 4, el 25% de descuento se mantiene durante todo el resto del curso, incluidas las horas extra que puedan necesitarse en el tramo final (repaso de exámenes finales / selectividad), también a 16,875 €/hora.
+    <p class="fade" style="color:rgba(244,241,232,0.55); font-size:13px; margin-top:14px;">
+      Tarifa estándar de referencia: 22,50 €/h (bono de 12h). El descuento sube cada mes que seguís con nosotros.
     </p>
 
-    <div class="chart-box fade d2">
+    <div class="card fade d2" style="margin-top:28px;">
+      <h3 style="margin-bottom:14px;">💳 Cómo se paga cada mes</h3>
+      <table class="pricing">
+        <tr><th>Bono</th><th>Total del mes (30h)</th><th>Pago en 2 plazos</th></tr>
+        <tr><td>Bono 1</td><td>607,50 €</td><td>2 × 303,75 €</td></tr>
+        <tr><td>Bono 2</td><td>573,75 €</td><td>286,88 € + 286,87 €</td></tr>
+        <tr><td>Bono 3</td><td>540,00 €</td><td>2 × 270,00 €</td></tr>
+        <tr class="highlight"><td>Bono 4 en adelante</td><td>506,25 €</td><td>253,13 € + 253,12 €</td></tr>
+      </table>
+      <p style="color:rgba(244,241,232,0.6); font-size:13px; margin-top:14px;">
+        A partir del bono 4, el 25% de descuento se mantiene todo el resto del curso, incluidas las horas extra del tramo final (repaso de exámenes / selectividad), también a 16 €/hora.
+      </p>
+    </div>
+
+    <div class="chart-box fade d3">
       <canvas id="chartPrecio" height="90"></canvas>
     </div>
   </div>
